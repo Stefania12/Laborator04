@@ -2,6 +2,7 @@ package ro.pub.cs.systems.eim.lab04.contactsmanager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,8 +11,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+
+interface Constants {
+    int CONTACTS_MANAGER_REQUEST_CODE = 2022;
+}
 
 public class ContactsManagerActivity extends AppCompatActivity {
     private EditText nameEditText;
@@ -38,6 +44,7 @@ public class ContactsManagerActivity extends AppCompatActivity {
             }
 
             if (view.getId() == R.id.cancel_button) {
+                setResult(Activity.RESULT_CANCELED, new Intent());
                 finish();
                 return;
             }
@@ -106,9 +113,29 @@ public class ContactsManagerActivity extends AppCompatActivity {
         websiteEditText = (EditText)findViewById(R.id.website_edit_text);
         imEditText = (EditText)findViewById(R.id.im_edit_text);
 
+
         ButtonListener buttonListener = new ButtonListener();
         findViewById(R.id.show_hide_button).setOnClickListener(buttonListener);
         findViewById(R.id.save_button).setOnClickListener(buttonListener);
         findViewById(R.id.cancel_button).setOnClickListener(buttonListener);
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            String phone = intent.getStringExtra("ro.pub.cs.systems.eim.lab04.contactsmanager.PHONE_NUMBER_KEY");
+            if (phone != null) {
+                phoneEditText.setText(phone);
+            } else {
+                Toast.makeText(this, getResources().getString(R.string.phone_error), Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (requestCode == Constants.CONTACTS_MANAGER_REQUEST_CODE) {
+            setResult(resultCode, new Intent());
+            finish();
+        }
     }
 }
