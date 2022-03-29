@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ContactsManager</string>
+    <string name="show_additional_fields">SHOW ADDITIONAL FIELDS</string>
+    <string name="hide_additional_fields">HIDE ADDITIONAL FIELDS</string>
 </resources>
